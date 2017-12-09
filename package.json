@@ -10,6 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.18.13",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "rollup-stream": "^1.24.1",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
