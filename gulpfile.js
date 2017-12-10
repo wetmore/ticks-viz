@@ -9,6 +9,7 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var autoClose = require('browser-sync-close-hook');
 var del = require('del');
+var runSequence = require('run-sequence');
 
 
 // Static server
@@ -62,7 +63,9 @@ gulp.task('rollup', function() {
   .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('dist', ['clean:dist', 'copy:statics', 'copy:data']);
+gulp.task('dist', function(cb) {
+  runSequence(['clean:dist', 'copy:statics', 'copy:data'], cb);
+});
 
 gulp.task('clean:dist', function() {
   return del(['./dist/**/*']);
