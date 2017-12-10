@@ -7,9 +7,17 @@ var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
+var autoClose = require('browser-sync-close-hook');
 
 // Static server
 gulp.task('serve', ['rollup'], function() {
+  browserSync.use({
+    plugin() {},
+    hooks: {
+      'client:js': autoClose, // <-- important part 
+    },
+  });
+  
   browserSync.init({
     server: {
       baseDir: "./app"
