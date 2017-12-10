@@ -8,10 +8,11 @@ var sourcemaps = require('gulp-sourcemaps');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var autoClose = require('browser-sync-close-hook');
+var del = require('del');
 
 
 // Static server
-gulp.task('serve', ['rollup'], function() {
+gulp.task('serve', ['dist', 'rollup'], function() {
   browserSync.use({
     plugin() {},
     hooks: {
@@ -21,7 +22,7 @@ gulp.task('serve', ['rollup'], function() {
 
   browserSync.init({
     server: {
-      baseDir: "./app"
+      baseDir: "./dist"
     }
   });
 
@@ -57,8 +58,22 @@ gulp.task('rollup', function() {
   .pipe(sourcemaps.write('.'))
 
 
-  // and output to ./app/dist/app.compiled.js as normal.
-  .pipe(gulp.dest('./app/dist'));
+  // and output to ./dist/app.compiled.js as normal.
+  .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('dist', ['clean:dist', 'copy:statics', 'copy:data']);
+
+gulp.task('clean:dist', function() {
+  return del(['./dist/**/*']);
+});
+
+gulp.task('copy:statics', function() {
+  return gulp.src(['./app/*.css', './app/index.html']).pipe(gulp.dest('./dist'));
+});
+
+gulp.task('copy:data', function() {
+  return gulp.src(['./app/data/*']).pipe(gulp.dest('./dist/data'));
 });
 
 gulp.task('js-watch', ['rollup'], function(done) {

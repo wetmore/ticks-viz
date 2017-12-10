@@ -11,6 +11,7 @@
   "devDependencies": {
     "browser-sync": "^2.18.13",
     "browser-sync-close-hook": "^1.0.5",
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.1",
     "rollup-plugin-commonjs": "^8.2.6",
