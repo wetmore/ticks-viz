@@ -1,7 +1,5 @@
 import dateFns from 'date-fns';
-import {
-  GradeHelper
-} from './gradeHelper.js';
+import GradeHelper from './gradeHelper.js';
 import {
   mpConverter
 } from './mpConverter.js';
@@ -32,7 +30,7 @@ var svg = d3.select('.chart')
 d3.tsv('data/ritter_ticks.tsv', function(data) {
   d3.tsv('data/grades.tsv', function(gradeData) {
     // Create the grade helper.
-    var gradeHelper = GradeHelper(gradeData);
+    var gradeHelper = new GradeHelper(gradeData);
     var GRADE_TYPE = GradeType.YDS;
 
     // Get all grades for the current grade type.
