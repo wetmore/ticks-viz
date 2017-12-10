@@ -6,8 +6,10 @@ import {
 } from './types.js';
 
 class GradeHelper {
-  constructor(gradeData) {
+  constructor(gradeData, type) {
     this.gradeData_ = gradeData;
+    this.type_ = type;
+
     /* YDSN = Yosemite Decimal System Normalized. This means no -,+, or slash
      * grades, only number and letter grades. Grades in YDS which are not in YDSN
      * are mapped to a YDSN grade according to the letterGradeNormalizer map
@@ -43,7 +45,7 @@ class GradeHelper {
     // Build arrays of unique grade ranges for each system.
     gradeData.forEach((g) => {
       for (let i = 0; i < 6; i++) {
-        var newVal = g[this.typeToCol(i)];
+        var newVal = g[this.typeToCol_(i)];
         var systemArray = this.gradeOrders_[i];
 
         // If we are looking at a yds grade and it's not a valid YDSN grade,
@@ -59,12 +61,12 @@ class GradeHelper {
     });
   }
 
-  typeToCol(type) {
+  typeToCol_(type) {
     return 'yds fr aus uiaa sa uk'.split(' ')[type];
   }
 
-  normalize(grade, type) {
-    if (type == GradeType.YDS) {
+  normalize(grade) {
+    if (this.type_ == GradeType.YDS) {
       let tenAndUpMatch = /(5\.\d\d)(.*)$/.exec(grade)
       if (tenAndUpMatch) {
         let normalizedEnd = this.letterGradeNormalizer_[tenAndUpMatch[2]];
@@ -86,8 +88,9 @@ class GradeHelper {
     return grade;
   }
 
-  getGradeRange(data, type) {
-    var relevantGrades = this.gradeData_.map((d) => d[this.typeToCol(type)]);
+  getGradeRange(data) {
+    var type = this.type_;
+    var relevantGrades = this.gradeData_.map((d) => d[this.typeToCol_(type)]);
     var indices = data.reduce(function([min, max], val) {
       var grade = relevantGrades.indexOf(mpConverter(val).getRating(type));
       if (grade < 0) {
@@ -98,8 +101,8 @@ class GradeHelper {
     return indices.map((i) => relevantGrades[i]);
   }
 
-  getAllGradesFor(type) {
-    return this.gradeOrders_[type];
+  getAllGrades() {
+    return this.gradeOrders_[this.type_];
   }
 }
 

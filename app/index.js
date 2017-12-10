@@ -30,21 +30,19 @@ var svg = d3.select('.chart')
 d3.tsv('data/ritter_ticks.tsv', function(data) {
   d3.tsv('data/grades.tsv', function(gradeData) {
     // Create the grade helper.
-    var gradeHelper = new GradeHelper(gradeData);
     var GRADE_TYPE = GradeType.YDS;
+    var gradeHelper = new GradeHelper(gradeData, GRADE_TYPE);
 
     // Get all grades for the current grade type.
-    var grades = gradeHelper.getAllGradesFor(GRADE_TYPE);
-
-    console.log(gradeData.map((g) => g.yds).map((g) => [g, gradeHelper.normalize(g, GRADE_TYPE)]));
+    var grades = gradeHelper.getAllGrades();
 
     // Get the smallest range of grades containing the routes in the
     // user's ticks.
-    var gradeRange = gradeHelper.getGradeRange(data, GRADE_TYPE)
+    var gradeRange = gradeHelper.getGradeRange(data)
 
     let [start, end] = d3.extent(data, (d) => mpConverter(d).getDate())
     var dateRange = [dateFns.startOfMonth(start), dateFns.endOfMonth(end)];
-    console.log(gradeRange.map((g) => gradeHelper.normalize(g, GRADE_TYPE)), dateRange);
+    console.log(gradeRange.map((g) => gradeHelper.normalize(g)), dateRange);
 
 
     // Arrange the data by date, then by
@@ -54,7 +52,7 @@ d3.tsv('data/ritter_ticks.tsv', function(data) {
         return dateFns.startOfMonth(date);
       })
       .key(function(d) {
-        return gradeHelper.normalize(mpConverter(d).getRating(GRADE_TYPE), GRADE_TYPE);
+        return gradeHelper.normalize(mpConverter(d).getRating(GRADE_TYPE));
       })
       .entries(data.filter((d) => {
         var rt = mpConverter(d).getRouteType();
