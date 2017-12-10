@@ -21,7 +21,6 @@ var margin = {
   w = 1000 - margin.left - margin.right,
   h = 500 - margin.top - margin.bottom;
 
-debugger;
 var svg = d3.select('.chart')
   .attr("width", w + margin.left + margin.right)
   .attr("height", h + margin.top + margin.bottom)

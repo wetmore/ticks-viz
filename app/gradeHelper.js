@@ -6,17 +6,16 @@ import {
 } from './types.js';
 
 var GradeHelper = function(gradeData) {
-  // YDSN = Yosemite Decimal System Normalized
+  /* YDSN = Yosemite Decimal System Normalized. This means no -,+, or slash
+   * grades, only number and letter grades. Grades in YDS which are not in YDSN
+   * are mapped to a YDSN grade according to the letterGradeNormalizer map
+   * below.
+   * 
+   * The visualization works in terms of YDSN when arranging routes by grade,
+   * but will still show the route's unnormalized YDS grade when showing route
+   * info for a specific route.
+   */
   var YDSNValidator = /5\.(\d$|\d\d[abcd]$)/m;
-  var gradeOrders = [
-    [],
-    [],
-    [],
-    [],
-    [],
-    []
-  ];
-
   var letterGradeNormalizer = {
     'a': 'a',
     '-': 'a',
@@ -30,29 +29,31 @@ var GradeHelper = function(gradeData) {
     '+': 'd'
   };
 
+  var gradeOrders = [
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ];
+
   var typeToCol = function(type) {
     return 'yds fr aus uiaa sa uk'.split(' ')[type];
   }
 
-  // Loop through the grades, building a list of normalized yds grades
-  // Normalized grades are yds grades with only a decimal number, or decimal
-  // with one of {a,b,c,d} at the end.
-  // The visualization works in terms of YDSN when arranging routes by grade,
-  // but will still show the route's unnormalized YDS grade when showing route
-  // info for a specific route.
-
-  // Also build arrays of unique grade ranges for each system.
+  // Build arrays of unique grade ranges for each system.
   gradeData.forEach((g) => {
-    if (YDSNValidator.test(g.yds) || g.yds[0] != '5') {
-      var ydsn = gradeOrders[0];
-      if (ydsn.length == 0 || g.yds != ydsn[ydsn.length - 1]) {
-        ydsn.push(g.yds);
-      }
-    }
-
-    for (let i = 1; i < 6; i++) {
-      var systemArray = gradeOrders[i];
+    for (let i = 0; i < 6; i++) {
       var newVal = g[typeToCol(i)];
+      var systemArray = gradeOrders[i];
+
+      // If we are looking at a yds grade and it's not a valid YDSN grade,
+      // skip it.
+      if (i == 0 && !(YDSNValidator.test(newVal) || newVal[0] != '5')) {
+        continue;
+      }
+
       if (systemArray.length == 0 || newVal != systemArray[systemArray.length - 1]) {
         systemArray.push(newVal);
       }
@@ -75,6 +76,7 @@ var GradeHelper = function(gradeData) {
           if (nineAndBelowMatch) {
             return nineAndBelowMatch[1];
           } else {
+            // What about other class terrain?
             return null;
           }
         }
