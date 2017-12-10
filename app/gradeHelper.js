@@ -5,7 +5,7 @@ import {
   GradeType
 } from './types.js';
 
-class GradeHelper {
+export default class GradeHelper {
   constructor(gradeData, type) {
     this.gradeData_ = gradeData;
     this.type_ = type;
@@ -105,7 +105,3 @@ class GradeHelper {
     return this.gradeOrders_[this.type_];
   }
 }
-
-export {
-  GradeHelper as default
-};

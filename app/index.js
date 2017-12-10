@@ -3,6 +3,7 @@ import GradeHelper from './gradeHelper.js';
 import {
   mpConverter
 } from './mpConverter.js';
+import MPConverter from './converters/MPConverter.js';
 import {
   GradeType,
   RouteType,
@@ -29,6 +30,10 @@ var svg = d3.select('.chart')
 // Load data
 d3.tsv('data/ritter_ticks.tsv', function(data) {
   d3.tsv('data/grades.tsv', function(gradeData) {
+    // Log data for debugging convenience.
+    window.vizdata = data;
+    console.log(data.map((d) => MPConverter.convert(d)));
+
     // Create the grade helper.
     var GRADE_TYPE = GradeType.YDS;
     var gradeHelper = new GradeHelper(gradeData, GRADE_TYPE);

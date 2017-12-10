@@ -9,6 +9,7 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var autoClose = require('browser-sync-close-hook');
 
+
 // Static server
 gulp.task('serve', ['rollup'], function() {
   browserSync.use({
@@ -17,7 +18,7 @@ gulp.task('serve', ['rollup'], function() {
       'client:js': autoClose, // <-- important part 
     },
   });
-  
+
   browserSync.init({
     server: {
       baseDir: "./app"
@@ -25,7 +26,7 @@ gulp.task('serve', ['rollup'], function() {
   });
 
   gulp.watch("app/*.html").on('change', browserSync.reload);
-  gulp.watch("app/*.js", ['js-watch']);
+  gulp.watch("app/**/*.js", ['js-watch']);
 });
 
 gulp.task('rollup', function() {
